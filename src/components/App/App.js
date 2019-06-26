@@ -13,12 +13,15 @@ let track3 = {name: 'All Love feat. Manu Laudic', artist: 'Biniyam', album: 'The
 class App extends React.Component{
   constructor(props){
     super(props);
+    
     this.state = {
       searchResults:[track1, track2, track3],
       playlistName :'hottest Playlist 1',
       playlistTracks: [track3, track1]
     };
+
     this.addTrack = this.addTrack.bind(this);
+    this.removeTrack = this.removeTrack.bind(this);
   }
 
   addTrack(track){
@@ -31,6 +34,17 @@ class App extends React.Component{
       });
     }
   }
+  removeTrack(track){
+    //If it is playlist, we want it out of there
+    if(this.state.playlistTracks.find(savedTrack => track.id === savedTrack.id)){
+      let arr = [...this.state.playlistTracks]; //copy of the array
+      let index = arr.indexOf(track);//find array of track to remove
+      if (index !== -1){
+        arr.splice(index, 1);//remove it from the copy array and ste that as the new state
+        this.setState({playlistTracks: arr});
+      }
+    }
+  }
 
   render(){
     return (
@@ -40,7 +54,9 @@ class App extends React.Component{
           <SearchBar />
           <div className="App-playlist">
             <SearchResults SearchResults={this.state.searchResults} onAdd={this.addTrack}/>
-            <Playlist playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} />
+            <Playlist playlistName={this.state.playlistName}
+             playlistTracks={this.state.playlistTracks}
+             onRemove={this.removeTrack} />
           </div>
     </div>
   </div>

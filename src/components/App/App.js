@@ -3,6 +3,7 @@ import './App.css';
 import SearchBar from './../SearchBar/SearchBar';
 import SearchResults from'./../SearchResults/SearchResults';
 import Playlist from'./../Playlist/Playlist';
+import Spotify from './../../util/Spotify';
 
 let track1 = {name: 'Senorita', artist: 'shawn Mendes', album: 'Album1', id: 101};
 let track2 = {name: 'Don\'t Pretend', artist: 'Khalid', album: 'SAFE', id: 102};
@@ -17,7 +18,7 @@ class App extends React.Component{
     this.state = {
       searchResults:[track1, track2, track3],
       playlistName :'hottest Playlist 1',
-      playlistTracks: [track3, track1]
+      playlistTracks: []
     };
 
     this.addTrack = this.addTrack.bind(this);
@@ -28,9 +29,17 @@ class App extends React.Component{
   }
   savePlaylist(){
     let trackURIs = [];
+    Spotify.savePlaylist(this.state.playlistName, trackURIs);
   }
+  componentWillMount(){
+    Spotify.getAccessToken();
+  }
+
   search(term) {
     console.log(term);
+    Spotify.search(term).then(results =>{
+      this.setState({searchResults: results})
+    });
   }
 
   updatePlaylistName (name){

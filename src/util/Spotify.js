@@ -64,8 +64,13 @@ const Spotify = {
     savePlaylist: function(playlistName, trackURIs){//(playlistName, trackURIs)
         let userID= '';
         let playlistID = '';
-        //get userID, use it to post playlist name, 
-        return fetch('https://api.spotify.com/v1/me',{
+        let userName ="";
+        //do we have a playlist name and tracks? if not,
+       // dont send the empty request
+
+       if(playlistName && trackURIs.length >1){
+           //get userID, use it to post playlist name, 
+            return fetch('https://api.spotify.com/v1/me',{
                 headers: {
                     Authorization :`Bearer ${accessToken}`
                 }
@@ -74,14 +79,13 @@ const Spotify = {
                 let res = response.json();
                 return res;                
             }).then(jsonresponse =>{
-                console.log(jsonresponse.id);
+                console.log(jsonresponse);
+                userName =jsonresponse.display_name;
                 userID=jsonresponse.id;//got user Id
                 return jsonresponse;
             }).then(()=>{
                 //now post the playlist name to spotify, it will return us
                 // an playlist id which we can then add songs to.
-
-
                 let data= {name: playlistName};
                 return fetch(`https://api.spotify.com/v1/users/${userID}/playlists`,{
                     method:"post",
@@ -89,26 +93,39 @@ const Spotify = {
                         Authorization :`Bearer ${accessToken}`
                     },
                     body: JSON.stringify(data)
+
                 }).then(response =>{
-                    let res = response.json();
-                    return res;                
-                }).then(jsonResponse =>{
+                    return response.json();
+
+                }).then(jsonResponse =>{//extract playlistID from response
                     console.log(jsonResponse);
                     playlistID = jsonResponse.id;
-                    console.log('playlist id '+playlistID);
+                    console.log('playlist id '+ playlistID);
                     return jsonResponse; 
                 })
-            })
-
-
-
-       /* //do we have a playlist name and tracks? if not,
-       // dont send the empty request
-       if(playlistName && trackURIs.length === 0){
+            }).then(()=>{//send the actual songs to the playlist
+                let data = {uris: trackURIs};
+                return fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks`,{
+                    method:'post',
+                    headers: {
+                        Authorization :`Bearer ${accessToken}`
+                    },
+                    body:JSON.stringify(data)
+                }).then(response => {
+                    return response.json();
+                }).then(jsonResponse => {
+                    console.log(jsonResponse);
+                    return jsonResponse;
+                }).then(()=>{
+                    window.alert(`${userName} now has anew playlist called ${playlistName}`);
+                })
+            });
                     
-        }else {
+        }else if(playlistName && trackURIs.length <1) {
+            
+            window.alert("You need to have a playlist name and at least one song selected to proceed");
             return; 
-        }*/
+        }
 
     }
 }

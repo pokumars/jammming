@@ -1,14 +1,17 @@
-
 //let accessToken =``;
 let accessToken =``;
-//let redirectURI ="http://localhost:3000/";
-let redirectURI ="https://jammmingohe.surge.sh";
+let redirectURI ="http://localhost:3000/";
+//let redirectURI ="https://jammmingohe.surge.sh";
 let asiakasID = '31bf72d5669b45b3b8646cdf0703f8ef';
-let myHeaders = {Authorization :`Bearer ${accessToken}`};
 
 const Spotify = {
+    currentToken: accessToken,
+    isToken: function(){
+        console.log(`Accestoken right now -------> ${accessToken}`)
+    },
     search: function(searchTerm){
         console.log(' in spotify.js search()');
+        if (accessToken=== "") {this.getAccessToken()}
         return fetch(`https://api.spotify.com/v1/search?q=${searchTerm}&type=track`,{
             headers:{
                 Authorization :`Bearer ${accessToken}`
@@ -38,7 +41,7 @@ const Spotify = {
     getAccessToken: function(){
         let currentURL = window.location.href;
         let time;
-
+        console.log(accessToken)
         if(accessToken.length > 3){//If it has access token
             console.log('It already has access token, but not in url');
             console.log(accessToken)
@@ -46,7 +49,7 @@ const Spotify = {
 
         }else if(currentURL.match(/access_token=([^&]*)/)){// else take from take it from url
             console.log('It already has access token in url');
-            accessToken =``;
+            //accessToken =``;
             accessToken = currentURL.match(/access_token=([^&]*)/g).join('').substring(13);
             time = Number(currentURL.match(/expires_in=([^&]*)/g).join('').substring(11));
 
@@ -57,9 +60,13 @@ const Spotify = {
             window.history.pushState('Access Token', null, '/');
 
         }else {//hasn't yet requested the token so request it now.
-            console.log('doesnt have access token. Make request');
-            let url =`https://accounts.spotify.com/authorize?client_id=${asiakasID}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectURI}`;
-            window.location= url;
+            let confirmLogin = window.confirm("You must login to spotify to proceed. \nThis will open Spotify's login and return when Spotify confirms your credentials. \nClick Ok to proceed");
+            
+            if(confirmLogin){
+                console.log('doesnt have access token. Make request');
+                let url = `https://accounts.spotify.com/authorize?client_id=${asiakasID}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectURI}`;
+                window.location = url;
+            }
         }
     },
     savePlaylist: function(playlistName, trackURIs){//(playlistName, trackURIs)

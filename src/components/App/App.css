@@ -8,13 +8,33 @@ html {
   font-size: 18px;
 }
 
-h1 {
-  padding: .77rem 0;
+.navbar{
+  padding: .2rem 0;
   background-color: #010c3f;
-  text-align: center;
   font-family: 'Poppins', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.navbar button{
+  font-size: 0.7rem;
+  padding: 11px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.navbar button:hover {
+  background-color: black;
+  color: white;
+}
+.navbar h1 {
   font-size: 1.88rem;
   color: #fff;
+  display: inline;
 }
 
 h1 .highlight {

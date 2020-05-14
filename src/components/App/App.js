@@ -3,6 +3,7 @@ import './App.css';
 import SearchBar from './../SearchBar/SearchBar';
 import SearchResults from'./../SearchResults/SearchResults';
 import Playlist from'./../Playlist/Playlist';
+import InfoBar from './../InfoBar/InfoBar';
 import Spotify from './../../util/Spotify';
 
 /*
@@ -41,7 +42,7 @@ class App extends React.Component{
   }
 
   componentDidMount(){
-    Spotify.getAccessToken();
+    Spotify.isToken();
   }
 
   search(term) {
@@ -68,33 +69,38 @@ class App extends React.Component{
     }
   }
   removeTrack(track){
-    //If it is playlist, we want it out of there
+    //If it is in playlist, we want it out of there
     if(this.state.playlistTracks.find(savedTrack => track.id === savedTrack.id)){
       let arr = [...this.state.playlistTracks]; //copy of the array
-      let index = arr.indexOf(track);//find array of track to remove
+      let index = arr.indexOf(track);//find index of track to remove
       if (index !== -1){
-        arr.splice(index, 1);//remove it from the copy array and ste that as the new state
+        arr.splice(index, 1);//remove it from the copy array and set that as the new state
         this.setState({playlistTracks: arr});
       }
     }
   }
 
-  render(){
+  render() {
     return (
       <div>
-        <h1>Ja<span className="highlight">mmm</span>ing</h1>
+        <div className="navbar">
+          <h1>Ja<span className="highlight">mmm</span>ing</h1>
+          {Spotify.currentToken !== "" && <button onClick={Spotify.getAccessToken}>Login to Spotify</button>}
+        </div>
+        <InfoBar />
         <div className="App">
-          <SearchBar onSearch={this.search}/>
+          <SearchBar onSearch={this.search} />
+          
           <div className="App-playlist">
-            <SearchResults SearchResults={this.state.searchResults} onAdd={this.addTrack}/>
+            <SearchResults SearchResults={this.state.searchResults} onAdd={this.addTrack} />
             <Playlist playlistName={this.state.playlistName}
-             playlistTracks={this.state.playlistTracks}
-             onRemove={this.removeTrack}
-             onNameChange={this.updatePlaylistName}
-             onSave={this.savePlaylist} />
+              playlistTracks={this.state.playlistTracks}
+              onRemove={this.removeTrack}
+              onNameChange={this.updatePlaylistName}
+              onSave={this.savePlaylist} />
           </div>
-    </div>
-  </div>
+        </div>
+      </div>
     );
   }
 }

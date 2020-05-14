@@ -1,7 +1,7 @@
 //let accessToken =``;
 let accessToken =``;
-let redirectURI ="http://localhost:3000/";
-//let redirectURI ="https://jammmingohe.surge.sh";
+//let redirectURI ="http://localhost:3000/";
+let redirectURI ="https://jammmingohe.surge.sh";
 let asiakasID = '31bf72d5669b45b3b8646cdf0703f8ef';
 
 const Spotify = {

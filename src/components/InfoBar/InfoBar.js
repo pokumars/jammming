@@ -7,9 +7,10 @@ class InfoBar extends React.Component {
   render() {
     return (
       <div className="infobar">
-        <p>This site is used to create playlists for your Spotify. Search songs, add it to
+        <p>This tool is used to create playlists for your Spotify. Search, add songs to
           the list on the right(or bottom if you are on mobile) and when you are done 
-          adding songs to your list, and click "save to Spotify".</p>
+          adding songs to your list, give the playlist a name and click "save to Spotify".
+          <br/> The playlist should now be in your spotify account</p>
       </div>
     )
   }

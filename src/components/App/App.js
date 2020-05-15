@@ -48,7 +48,13 @@ class App extends React.Component{
   search(term) {
     console.log(term);
     Spotify.search(term).then(results =>{
-      this.setState({searchResults: results})
+      if(!results){
+        window.alert("you have no spotify credentials. \nPlease login to spotify");
+        Spotify.currentToken = ""
+      }
+      else{
+        this.setState({searchResults: results})
+      }
     });
   }
 
@@ -85,7 +91,7 @@ class App extends React.Component{
       <div>
         <div className="navbar">
           <h1>Ja<span className="highlight">mmm</span>ing</h1>
-          {Spotify.currentToken !== "" && <button onClick={Spotify.getAccessToken}>Login to Spotify</button>}
+          {Spotify.currentToken == "" && <button onClick={Spotify.getAccessToken}>Login to Spotify</button>}
         </div>
         <InfoBar />
         <div className="App">

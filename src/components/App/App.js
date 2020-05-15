@@ -1,10 +1,11 @@
+import {search, accessToken, savePlaylist, getAccessToken} from './../../util/Spotify';
 import React from 'react';
 import './App.css';
 import SearchBar from './../SearchBar/SearchBar';
 import SearchResults from'./../SearchResults/SearchResults';
 import Playlist from'./../Playlist/Playlist';
 import InfoBar from './../InfoBar/InfoBar';
-import Spotify from './../../util/Spotify';
+
 
 /*
 let track1 = {name: 'Senorita', artist: 'shawn Mendes', album: 'Album1', id: 101};
@@ -20,7 +21,7 @@ class App extends React.Component{
     this.state = {
       searchResults: [],
       playlistName :'New playlist',
-      playlistTracks: []
+      playlistTracks: [],
     };
 
     this.addTrack = this.addTrack.bind(this);
@@ -32,7 +33,7 @@ class App extends React.Component{
   savePlaylist(){
     let trackURIs = this.state.playlistTracks.map(track => track.uri);
     //console.log(trackURIs);
-    Spotify.savePlaylist(this.state.playlistName, trackURIs);
+    savePlaylist(this.state.playlistName, trackURIs);
     this.setState({
       searchResults: [],
       playlistTracks: [],
@@ -42,15 +43,15 @@ class App extends React.Component{
   }
 
   componentDidMount(){
-    Spotify.isToken();
+    console.log(accessToken)
   }
 
   search(term) {
     console.log(term);
-    Spotify.search(term).then(results =>{
+    search(term).then(results =>{
       if(!results){
         window.alert("you have no spotify credentials. \nPlease login to spotify");
-        Spotify.currentToken = ""
+        
       }
       else{
         this.setState({searchResults: results})
@@ -91,7 +92,7 @@ class App extends React.Component{
       <div>
         <div className="navbar">
           <h1>Ja<span className="highlight">mmm</span>ing</h1>
-          {Spotify.currentToken == "" && <button onClick={Spotify.getAccessToken}>Login to Spotify</button>}
+          {accessToken == "" && <button onClick={getAccessToken}>Login to Spotify</button>}
         </div>
         <InfoBar />
         <div className="App">
